@@ -1,0 +1,27 @@
+language: generic
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t razaqofficial/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true razaqofficial/react-test npm run test
+
+after_success:
+  - docker build -t razaqofficial/multi-client ./client
+  - docker build -t razaqofficial/multi-nginx ./nginx
+  - docker build -t razaqofficial/multi-server ./server
+  - docker build -t razaqofficial/multi-worker ./worker
+
+# Log in to docker hub
+- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+#push the above images to docker hub
+- docker push razaqofficial/multi-client
+- docker push razaqofficial/multi-nginx
+- docker push razaqofficial/multi-server
+- docker push razaqofficial/multi-worker
+
+
