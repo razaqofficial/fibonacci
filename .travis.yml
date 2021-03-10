@@ -23,4 +23,17 @@ after_success:
   - docker push razaqofficial/multi-server
   - docker push razaqofficial/multi-worker
 
+deploy:
+  edge: true
+  provider: "elasticbeanstalk"
+  region: eu-west-2
+  app: fibonacci
+  env: Fibonacci-env,
+  bucket_name: elasticbeanstalk-eu-west-2-719381170469
+  bucket_path: fibonacci-multi
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+  on:
+    branch: "master"
+
 
